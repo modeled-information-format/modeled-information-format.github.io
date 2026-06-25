@@ -23,8 +23,8 @@ landing and the doc-site, builds the doc-site, assembles `_site/` (landing at th
 root, doc-site `dist/` under `/docs/`), and deploys it to GitHub Pages. All
 actions are SHA-pinned per the org Actions policy.
 
-Cross-repo source access authenticates from the org GitHub App
-(`modeled-information-format-ci`) via `actions/create-github-app-token`, never the
+Cross-repo source access is authenticated via the org GitHub App
+(`modeled-information-format-ci`) using `actions/create-github-app-token`, never the
 default `GITHUB_TOKEN`. Set the app credentials on this repo (or org-wide):
 
 - `vars.MIF_CI_CLIENT_APP_ID` — the App ID (`4139655`)

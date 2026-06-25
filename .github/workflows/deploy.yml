@@ -5,8 +5,8 @@ name: Deploy Pages site
 #   /docs/   <- ecosystem documentation, built from the `doc-site` repo (Astro/Starlight, base "/docs")
 # The MIF specification at mif-spec.dev is served separately from the `MIF` repo.
 #
-# Cross-repo source access is authenticated from the org GitHub App
-# (modeled-information-format-ci) via an installation token — never the default
+# Cross-repo source access is authenticated via the org GitHub App
+# (modeled-information-format-ci) using an installation token — never the default
 # GITHUB_TOKEN. The Pages deploy itself uses the run's ephemeral OIDC token.
 
 on:
