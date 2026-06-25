@@ -30,8 +30,9 @@ default `GITHUB_TOKEN`. Set the app credentials on this repo (or org-wide):
 - `vars.MIF_CI_CLIENT_APP_ID` — the App ID (`4139655`)
 - `secrets.MIF_CI_CLIENT_APP_PRIVATE_KEY` — the App's private key
 
-The app installation must grant `contents: read` on `.github`, `doc-site`, and
-this repo. The Pages deployment step itself uses the run's ephemeral OIDC token.
+The App token is used only for the cross-repo checkouts, so the installation must
+grant `contents: read` on `.github` and `doc-site`. This repo is checked out with
+the default token, and the Pages deployment step uses the run's ephemeral OIDC token.
 
 The landing's authoring home stays in the `.github` repo. To redeploy after a
 change to either source repo, push to `main` here, run the workflow manually, or
