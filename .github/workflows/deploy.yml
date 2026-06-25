@@ -1,0 +1,86 @@
+name: Deploy Pages site
+
+# Publishes the organization site at https://modeled-information-format.github.io
+#   /        <- root landing, authored in the `.github` repo
+#   /docs/   <- ecosystem documentation, built from the `doc-site` repo (Astro/Starlight, base "/docs")
+# The MIF specification at mif-spec.dev is served separately from the `MIF` repo.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # Allow the source repos to trigger a redeploy via repository_dispatch.
+  repository_dispatch:
+    types: [source-updated]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the Pages-root repo
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Check out the landing (.github repo)
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: modeled-information-format/.github
+          path: src/landing
+
+      - name: Check out the doc-site repo
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: modeled-information-format/doc-site
+          path: src/doc-site
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: src/doc-site/package-lock.json
+
+      - name: Build doc-site (base /docs)
+        working-directory: src/doc-site
+        run: |
+          npm ci
+          npm run build
+
+      - name: Assemble the published site
+        run: |
+          rm -rf _site
+          mkdir -p _site/docs
+          # Root landing from the .github repo
+          cp src/landing/index.html _site/index.html
+          cp src/landing/favicon.svg _site/favicon.svg
+          # Ecosystem docs under /docs (Astro built with base "/docs")
+          cp -R src/doc-site/dist/. _site/docs/
+          # Skip Jekyll so Astro's _astro/ assets are served verbatim
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
