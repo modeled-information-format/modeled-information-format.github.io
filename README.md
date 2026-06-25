@@ -23,6 +23,16 @@ landing and the doc-site, builds the doc-site, assembles `_site/` (landing at th
 root, doc-site `dist/` under `/docs/`), and deploys it to GitHub Pages. All
 actions are SHA-pinned per the org Actions policy.
 
+Cross-repo source access authenticates from the org GitHub App
+(`modeled-information-format-ci`) via `actions/create-github-app-token`, never the
+default `GITHUB_TOKEN`. Set the app credentials on this repo (or org-wide):
+
+- `vars.MIF_CI_CLIENT_APP_ID` — the App ID (`4139655`)
+- `secrets.MIF_CI_CLIENT_APP_PRIVATE_KEY` — the App's private key
+
+The app installation must grant `contents: read` on `.github`, `doc-site`, and
+this repo. The Pages deployment step itself uses the run's ephemeral OIDC token.
+
 The landing's authoring home stays in the `.github` repo. To redeploy after a
 change to either source repo, push to `main` here, run the workflow manually, or
 send a `repository_dispatch` event of type `source-updated`.
