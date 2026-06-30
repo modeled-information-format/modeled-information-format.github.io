@@ -37,3 +37,12 @@ the default token, and the Pages deployment step uses the run's ephemeral OIDC t
 The landing's authoring home stays in the `.github` repo. To redeploy after a
 change to either source repo, push to `main` here, run the workflow manually, or
 send a `repository_dispatch` event of type `source-updated`.
+
+## Release process
+
+This repository follows the shared, audit-gated attested release process of the
+[`modeled-information-format`](https://github.com/modeled-information-format)
+organization. The governing process — punch-list audit, epics and sub-issues, a
+decision log, a release workplan issue, one PR per epic under GitHub Flow, and
+the attested cutover — is documented in the org
+[release runbook](https://github.com/modeled-information-format/.github/blob/main/docs/runbooks/release-runbook.md).
