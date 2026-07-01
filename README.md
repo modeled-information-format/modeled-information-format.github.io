@@ -28,7 +28,7 @@ the five least-privilege apps (ADR-011) — using `actions/create-github-app-tok
 never the default `GITHUB_TOKEN`. Set the app credentials at the org level (or per
 repo):
 
-- `vars.PAGES_CLIENT_APP_ID` — the app's OAuth client id
+- `vars.PAGES_CLIENT_APP_ID` — the GitHub App client ID (passed to `create-github-app-token`)
 - `secrets.PAGES_CLIENT_APP_PRIVATE_KEY` — the app's private key
 
 The App token is used only for the cross-repo checkouts, so the installation must
