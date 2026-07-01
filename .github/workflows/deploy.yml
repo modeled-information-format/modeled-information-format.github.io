@@ -6,9 +6,9 @@ name: Deploy Pages site
 #   /research-harness-template/ <- research-harness-template docs, built from that repo (Astro/Starlight, base "/research-harness-template")
 # The MIF specification at mif-spec.dev is served separately from the `MIF` repo.
 #
-# Cross-repo source access is authenticated via the org GitHub App
-# (modeled-information-format-ci) using an installation token — never the default
-# GITHUB_TOKEN. The Pages deploy itself uses the run's ephemeral OIDC token.
+# Cross-repo source access is authenticated via the org `pages` GitHub App (one of
+# the five least-privilege apps, ADR-011) using an installation token — never the
+# default GITHUB_TOKEN. The Pages deploy itself uses the run's ephemeral OIDC token.
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Mint app installation token (org automation identity)
+      - name: Mint a pages-app installation token (cross-repo checkout)
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
